@@ -6,7 +6,8 @@
 .RData
 
 # User-specific files
-.Ruserdata
+.Ruserdata SDSMCMC.Rproj
+.gitignore
 
 # Example code in package build process
 *-Ex.R
