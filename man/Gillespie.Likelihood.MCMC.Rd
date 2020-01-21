@@ -7,13 +7,13 @@
 Gillespie.Likelihood.MCMC(indata, nrepeat, prior.a, prior.b)
 }
 \arguments{
-\item{indata:}{input data set. SIR trajectory data set}
+\item{indata}{input data set. SIR trajectory data set}
 
-\item{nrepeat:}{number of iteration of MCMC}
+\item{nrepeat}{number of iteration of MCMC}
 
-\item{prior.a:}{hyper shape parameter of gamma prior for beta, gamma}
+\item{prior.a}{hyper shape parameter of gamma prior for beta, gamma}
 
-\item{prior.b:}{hyper rate parameter of gamma prior for beta, gamma}
+\item{prior.b}{hyper rate parameter of gamma prior for beta, gamma}
 }
 \value{
 returning posterior sample of beta and gamma

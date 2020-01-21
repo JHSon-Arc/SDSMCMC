@@ -42,11 +42,11 @@ SIR.ODE <- function(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic) {
 #'
 #' Likelihood function for Eq. (4.3)
 #'
-#' @param SI_ti: return values from SIR.ODE() function.
-#' @param p.m: values of beta, gamma, rho
-#' @param delta: duration of infectious period
-#' @param n.num: number of susecptible
-#' @param nz.num: number of removed among initially susceptible individual returning likelihood
+#' @param SI_ti return values from SIR.ODE() function.
+#' @param p.m values of beta, gamma, rho
+#' @param delta duration of infectious period
+#' @param n.num number of susecptible
+#' @param nz.num number of removed among initially susceptible individual returning likelihood
 #' @export
 llikelihood <- function(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz) {
   k <- nrow(SI_ti)
@@ -59,7 +59,16 @@ llikelihood <- function(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz) {
 }
 
 
-
+#' MH.N()
+#'
+#' MH.N()
+#'
+#' @param N
+#' @param k
+#' @param p
+#' @param pri
+#' @param b
+#' @export
 MH.N <- function(N, k=cnt_obs, p ,  pri, b=tun[4]) {
   count = 0
   R1.m = N
@@ -87,13 +96,13 @@ MH.N <- function(N, k=cnt_obs, p ,  pri, b=tun[4]) {
 #' This function generates posterior samples of beta, gamma, and rho using MCMC based on SDS likelihood in subsection 4.2
 #' This function uses RAM method via adapt_S() function from ramcmc R-package
 #'
-#' @param in.data:  input data set, must be a form of sellke empidemic
-#' @param Tmax: cutoff time of epidemic
-#' @param nrepeat: number of iteration of MCMC
-#' @param ic: initial value of beta, gamma, and rho
-#' @param tun: tunning constant for proposal distribution of beta, gamma, rho
-#' @param prior.a: hyper shape parameter of gamma prior for beta, gamma, rho
-#' @param prior.b: hyper rate parameter of gamma prior for beta, gamma, rho
+#' @param in.data  input data set, must be a form of sellke empidemic
+#' @param Tmax cutoff time of epidemic
+#' @param nrepeat number of iteration of MCMC
+#' @param ic initial value of beta, gamma, and rho
+#' @param tun tunning constant for proposal distribution of beta, gamma, rho
+#' @param prior.a hyper shape parameter of gamma prior for beta, gamma, rho
+#' @param prior.b hyper rate parameter of gamma prior for beta, gamma, rho
 #' @return returning posterior samples of beta, gamma, rho
 #' @export
 SDS.Likelihood.MCMC <- function(data = in.data, Tmax, nrepeat = 1000,

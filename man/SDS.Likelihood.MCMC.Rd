@@ -15,19 +15,19 @@ SDS.Likelihood.MCMC(
 )
 }
 \arguments{
-\item{in.data:}{input data set, must be a form of sellke empidemic}
+\item{Tmax}{cutoff time of epidemic}
 
-\item{Tmax:}{cutoff time of epidemic}
+\item{nrepeat}{number of iteration of MCMC}
 
-\item{nrepeat:}{number of iteration of MCMC}
+\item{tun}{tunning constant for proposal distribution of beta, gamma, rho}
 
-\item{ic:}{initial value of beta, gamma, and rho}
+\item{prior.a}{hyper shape parameter of gamma prior for beta, gamma, rho}
 
-\item{tun:}{tunning constant for proposal distribution of beta, gamma, rho}
+\item{prior.b}{hyper rate parameter of gamma prior for beta, gamma, rho}
 
-\item{prior.a:}{hyper shape parameter of gamma prior for beta, gamma, rho}
+\item{ic}{initial value of beta, gamma, and rho}
 
-\item{prior.b:}{hyper rate parameter of gamma prior for beta, gamma, rho}
+\item{in.data}{input data set, must be a form of sellke empidemic}
 }
 \value{
 returning posterior samples of beta, gamma, rho

@@ -3,10 +3,10 @@
 #' This function generates posterior samples of beta, gamma, and rho using MCMC based on Examce likelihood in subsection 4.1
 #' This code refers Eq. (2.1) in Choi and Rempala (2012)
 #'
-#' @param indata: input data set. SIR trajectory data set
-#' @param nrepeat: number of iteration of MCMC
-#' @param prior.a: hyper shape parameter of gamma prior for beta, gamma
-#' @param prior.b: hyper rate parameter of gamma prior for beta, gamma
+#' @param indata input data set. SIR trajectory data set
+#' @param nrepeat number of iteration of MCMC
+#' @param prior.a hyper shape parameter of gamma prior for beta, gamma
+#' @param prior.b hyper rate parameter of gamma prior for beta, gamma
 #' @return returning posterior sample of beta and gamma
 #' @export
 Gillespie.Likelihood.MCMC <- function(indata, nrepeat, prior.a, prior.b) {

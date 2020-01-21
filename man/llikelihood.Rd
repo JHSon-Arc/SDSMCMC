@@ -7,15 +7,15 @@
 llikelihood(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz)
 }
 \arguments{
-\item{SI_ti:}{return values from SIR.ODE() function.}
+\item{SI_ti}{return values from SIR.ODE() function.}
 
-\item{p.m:}{values of beta, gamma, rho}
+\item{p.m}{values of beta, gamma, rho}
 
-\item{delta:}{duration of infectious period}
+\item{n.num}{number of susecptible}
 
-\item{n.num:}{number of susecptible}
+\item{nz.num}{number of removed among initially susceptible individual returning likelihood}
 
-\item{nz.num:}{number of removed among initially susceptible individual returning likelihood}
+\item{delta}{duration of infectious period}
 }
 \description{
 Likelihood function for Eq. (4.3)
