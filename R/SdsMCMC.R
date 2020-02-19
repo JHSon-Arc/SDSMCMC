@@ -59,147 +59,44 @@ llikelihood <- function(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz) {
 }
 
 
-#' MH.N()
-#'
-#' MH.N()
-#'
-#' @param N
-#' @param k
-#' @param p
-#' @param pri
-#' @param b
-#' @export
-MH.N <- function(N, k=cnt_obs, p ,  pri, b=tun[4]) {
-  count = 0
-  R1.m = N
-  z <- 1 + R1.m^2/b
-  u <- rpois(1, z) - rpois(1, z)
-  R1.star = R1.m + u
-  if(R1.star>=k){
-    lambda.st <- 1 + R1.star^2/b
-    lambda <- 1 + R1.m^2/b
-    prop.st <- log(besselI(2 * lambda, abs(R1.star - R1.m), expon.scaled = T))
-    prop <- log(besselI(2 * lambda.st, abs(R1.star - R1.m), expon.scaled = T))
-    q.st <- dbinom(x=k,size = R1.star, prob = p, log = T) + dpois(R1.star, lambda = pri, log = T)
-    q <- dbinom(x=k,size = R1.m, prob = p, log = T) + dpois(R1.m, lambda = pri, log = T)
-    logMH <- q.st - q + prop - prop.st
-    if (!is.nan(logMH) && runif(1) < exp(logMH)) {
-      N <- R1.star; count = 1;
-    }
-  }
-  return(list(N=N, count=count))
-}
-
-
 #' SDS Likelihood MCMc
 #'
 #' This function generates posterior samples of beta, gamma, and rho using MCMC based on SDS likelihood in subsection 4.2
+#' This function includes an additional step for generating the initial number of susceptible n. using NegativeBinomial
 #' This function uses RAM method via adapt_S() function from ramcmc R-package
 #'
-#' @param in.data  input data set, must be a form of sellke empidemic
+#' @param data input data set, must be a form of Sellke epidemic (two columns. first is infection time, second is recovery time)
 #' @param Tmax cutoff time of epidemic
+#' @param fitn if T the function estimate initial number of susceptible, if F the function does not estimate N and calculate from data, so inputted data must cover a total population
 #' @param nrepeat number of iteration of MCMC
-#' @param ic initial value of beta, gamma, and rho
-#' @param tun tunning constant for proposal distribution of beta, gamma, rho
-#' @param prior.a hyper shape parameter of gamma prior for beta, gamma, rho
-#' @param prior.b hyper rate parameter of gamma prior for beta, gamma, rho
-#' @return returning posterior samples of beta, gamma, rho
+#' @param prior.a hyper shape parameter of gamma prior for beta, gamma, rho, hyper parameter lambda
+#' @param prior.b hyper rate parameter of gamma prior for beta, gamma, rho, hyper parameter lambda
+#' @param ic initial value of beta, gamma, rho and N
+#' @return returning posterior samples of beta, gamma, rho (with fitn=F) or beta, gamma, rho, and n (with fitn=T)
 #' @export
-SDS.Likelihood.MCMC <- function(data = in.data, Tmax, nrepeat = 1000,
-                            tun, prior.a, prior.b, ic = c(k1, k2, k3)) {
-  T.max <- Tmax
-  n <- length(which(data[, 1] != 0))
-  delta <- c(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) &
-            (data[, 2] < T.max))), subset((T.max - data[, 1]),
-            ((data[,1] < T.max) & (data[, 2] >= T.max))))
-  nz <- length(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) &
-              (data[, 2] < T.max))))
-  ti <- subset(data[, 1], ((data[, 1] > 0) & (data[, 1] < T.max)))
-  cnt_obs = length(ti)
-  parm.m <- ic
-  parm.star <- parm.m
-
-  theta <- matrix(0, nrow = nrepeat, ncol = 3)
-  count <- 0
-  S <- diag(3)
-  for (rep in 1:nrepeat) {
-    repeat {
-      u <- mvrnorm(1, c(0, 0, 0), diag(c(tun[1], tun[2], tun[3])))
-      parm.star <- parm.m + S %*% u
-      if ((min(parm.star) > 0) & (parm.star[3] < 1)) {
-        tau <- uniroot(function(x) 1 - x - exp(-parm.star[1]/parm.star[2] *
-                         (x + parm.star[3])), c(0, 1))$root
-        if ((tau > 0) & (tau < 1))
-          break
-      }
-    }
-    sir.m <- SIR.ODE(indata = ti, Tmax = T.max, beta = parm.m[1], gamma = parm.m[2],
-                     ic = c(1, parm.m[3], 0))
-    sir.star <- SIR.ODE(indata = ti, Tmax = T.max, beta = parm.star[1],
-                     gamma = parm.star[2], ic = c(1, parm.star[3], 0))
-    l.lik.m <- llikelihood(SI_ti = sir.m, p.m = parm.m, n.num = n,
-                     delta.t = delta, nz.num = nz)
-    l.lik.star <- llikelihood(SI_ti = sir.star, p.m = parm.star, n.num = n,
-                     delta.t = delta, nz.num = nz)
-    alpha <- exp(l.lik.star - l.lik.m
-                 + dgamma(parm.star[1], prior.a[1], prior.b[1], log = T)
-                 - dgamma(parm.m[1], prior.a[1], prior.b[1], log = T)
-                 + dgamma(parm.star[2], prior.a[2], prior.b[2], log = T)
-                 - dgamma(parm.m[2], prior.a[2], prior.b[2], log = T)
-                 + dgamma(parm.star[3], prior.a[3], prior.b[3], log = T)
-                 - dgamma(parm.m[3], prior.a[3], prior.b[3],   log = T))
-    alpha <- min(alpha, 1)
-    if (!is.nan(alpha) && runif(1) < alpha) {
-      parm.m <- parm.star
-      count <- count + 1
-    }
-    S <- ramcmc::adapt_S(S, u, alpha, rep, gamma = min(1, (3 * rep)^(-2/3)))
-    theta[rep, ] <- parm.m
-    if (rep%%100 == 0)
-      cat("0")
+SDS.MCMC <- function(data, Tmax, fitn = T, nrepeat = 1000,
+                     prior.a, prior.b, ic = c(k1, k2, k3, k4)) {
+  if(fitn == T) {
+    n <- ic[4]
+    theta <- matrix(0, nrow = nrepeat, ncol = 4)
+  }else{
+    n <- length(which(data[, 1] != 0))
+    theta <- matrix(0, nrow = nrepeat, ncol = 3)
   }
-  print(count/nrepeat)
-  return(theta)
-}
-
-
-#' SDS Likelihood with N MCMC
-#'
-#' This function generates posterior samples of beta, gamma, and rho using MCMC based on SDS likelihood in subsection 4.2
-#' This function includes additional step for generating initial number of susceptible n.
-#' refering to Raftery (1988) , biometiria 75, 2 pp. 223-8
-#' This function uses RAM method via adapt_S() function from ramcmc R-package
-#'
-#' @param in.data  input data set, must be a form of sellke empidemic
-#' @param Tmax cutoff time of epidemic
-#' @param nrepeat number of iteration of MCMC
-#' @param ic initial value of beta, gamma, and rho
-#' @param tun tunning constant for proposal distribution of beta, gamma, rho, n
-#' @param prior.a hyper shape parameter of gamma prior for beta, gamma, rho, hyper paramter lambda
-#' @param prior.b hyper rate parameter of gamma prior for beta, gamma, rho, hyper paramter lambda
-#' @return returning posterior samples of beta, gamma, rho
-#' @export
-SDS.Likelihood.withN.MCMC <- function(data = in.data, Tmax, nrepeat = 1000,
-                                tun, prior.a, prior.b, ic = c(k1, k2, k3)) {
   T.max <- Tmax
-  n <- length(which(data[, 1] != 0))
-  delta <- c(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) &
-                                                (data[, 2] < T.max))), subset((T.max - data[, 1]),
-                                                                              ((data[,1] < T.max) & (data[, 2] >= T.max))))
-  nz <- length(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) &
-                                                  (data[, 2] < T.max))))
+  delta <- c(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) & (data[, 2] < T.max))),
+             subset((T.max - data[, 1])    , ((data[, 1] < T.max) & (data[, 2] >= T.max))))
+  nz <- length(subset((data[, 2] - data[, 1]), ((data[, 1] < T.max) & (data[, 2] < T.max))))
   ti <- subset(data[, 1], ((data[, 1] > 0) & (data[, 1] < T.max)))
   cnt_obs = length(ti)
-  parm.m <- ic
+  parm.m <- ic[1:3]
   parm.star <- parm.m
-  pri.n = rgamma(1, shape = n + prior.a[4], rate = 1 + prior.b[4])
 
-  theta <- matrix(0, nrow = nrepeat, ncol = 4)
-  count <- 0; count.n <- 0;
+  count <- 0;
   S <- diag(3)
   for (rep in 1:nrepeat) {
     repeat {
-      u <- mvrnorm(1, c(0, 0, 0), diag(c(tun[1], tun[2], tun[3])))
+      u <- mvrnorm(1, c(0, 0, 0), diag(c(1, 1, 1)))
       parm.star <- parm.m + S %*% u
       if ((min(parm.star) > 0) & (parm.star[3] < 1)) {
         tau <- uniroot(function(x) 1 - x - exp(-parm.star[1]/parm.star[2] *
@@ -231,23 +128,73 @@ SDS.Likelihood.withN.MCMC <- function(data = in.data, Tmax, nrepeat = 1000,
     S <- ramcmc::adapt_S(S, u, alpha, rep, gamma = min(1, (3 * rep)^(-2/3)))
     theta[rep,1:3] <- parm.m
 
-    # updating tau
-    x=vector('numeric',50)
-    x[1]=1
-    for (i in 1:(50-1)) {x[i+1]=1-exp(-parm.m[1]*(x[i]+parm.m[3])/parm.m[2])}
-    tau = x[50]
-
-    update = MH.N(N = n,k=cnt_obs, p=tau, pri=pri.n, b=tun[4])
-    n = update$N
-    count.n =count.n + update$count
-    pri.n = rgamma(1, shape = n + prior.a[4], rate = 1 + prior.b[4])
-    theta[rep,4] = n
-    if (rep%%100 == 0)
-      cat("0")
-
-
+    if (fitn ==T){
+      # updating tau
+      x=vector('numeric',50)
+      x[1]=1
+      for (i in 1:(50-1)) {x[i+1]=1-exp(-parm.m[1]*(x[i]+parm.m[3])/parm.m[2])}
+      tau = x[50]
+      n = cnt_obs + rnbinom(1,cnt_obs,prob=tau)
+      theta[rep,4] = n
+    }
+    if (rep%%1000 == 0) cat("0")
   }
-  print(c(count/nrepeat, count.n/nrepeat))
+  cat("Acceptance ratio of parameters: ",count/nrepeat,"\n")
+  if(fitn ==T){
+    colnames(theta) = c("beta","gamma","rho", "N")
+  }else{
+    colnames(theta) = c("beta","gamma","rho")
+  }
   return(theta)
 }
 
+
+#' MCMC simulation results
+#'
+#' This Plot summrizes MCMC simulation results.
+#'
+#' @param theta inputted data set. It contains MCMC simulation results.
+#' @param fitn if T the function estimate initial number of susceptible, if F the function does not estimate N and calculate from data, so inputted data must cover a total population
+#' @param burn burning period
+#' @param thin tinning period
+#' @param nrepeat number of posterior sample
+#' @return returning plots that summrizes MCMC simulation results
+#' @export
+result <- function(data, fitn = T, burn1=burn, nrepeat1=nrepeat, thin1=thin){
+  sel = burn1+seq(0,by=thin1,length.out = (nrepeat1))
+  result = data[sel,];
+  stat = rbind(apply(result,2,min),
+               apply(result,2,quantile,probs=0.25),
+               apply(result,2,median),
+               apply(result,2,mean),
+               apply(result,2,quantile,probs=0.75),
+               apply(result,2, max),
+               apply(result,2, sd),
+               apply(result,2, sd)/apply(result,2, mean))
+  if (fitn==T){
+    colnames(stat) = c("beta","gamma","rho", "N")
+    rownames(stat) = c("Min.","1st Qu.", "Median", "Mean", "3rd Qu.", "Max", "std", "CV")
+  }else{
+    colnames(stat) = c("beta","gamma","rho")
+    rownames(stat) = c("Min.","1st Qu.", "Median", "Mean", "3rd Qu.", "Max", "std", "CV")
+  }
+  print(stat)
+
+  if (fitn==T){
+    par(oma = c(0, 0, 4, 0), mar = c(4, 4, 1, 1))
+    mat = matrix(c(1, 2, 3, 4), 2, 2, byrow = T)
+    layout(mat)
+    plot(data[,1], type = "l", main = "beta")
+    plot(data[,2], type = "l", main = "gamma")
+    plot(data[,3], type = "l", main = "rho")
+    plot(data[,4], type = "l", main = "N")
+  }else{
+    par(oma = c(0, 0, 4, 0), mar = c(4, 4, 1, 1))
+    mat = matrix(c(1, 1, 2, 3), 2, 2, byrow = T)
+    layout(mat)
+    plot(data[,1], type = "l", main = "beta")
+    plot(data[,2], type = "l", main = "gamma")
+    plot(data[,3], type = "l", main = "rho")
+  }
+  par(mfrow=c(1,1))
+}
