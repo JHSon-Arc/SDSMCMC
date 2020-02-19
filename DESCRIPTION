@@ -10,3 +10,4 @@ License: use_mit_license(copyright_holder = "Boseung Choi")
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
+Imports: plyr, MASS, smfsb, ramcmc 
