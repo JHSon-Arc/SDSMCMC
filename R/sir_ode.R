@@ -1,10 +1,8 @@
-#' euler.prob
-#'
-#' rho=.038
-#' beta=0.2160
-#' gamma=0.1928
-#'
-#' @export
+#euler.prob
+#rho=.038
+#beta=0.2160
+#gamma=0.1928
+
 ode.final.size=function(rho=0.01, gamma=1,lambda=2.9,k=20)
 { x=vector('numeric',k)
 x[1]=1

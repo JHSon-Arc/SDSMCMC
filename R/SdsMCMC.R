@@ -3,7 +3,7 @@
 #' These functions are to draw posterior samples using MCMC for SDS likelihood in subsection 4.2 and Algorithm 5.1
 #' This function solves the ODE in Eq. (2.7) and step 3 in Algorithm 5.1
 #'
-#' @param inata descrete time of an individual. This values are came from Sellke epidemic data
+#' @param indata descrete time of an individual. This values are came from Sellke epidemic data
 #' @param Tmax cutoff time of epidemic
 #' @param dt time increment of ODE
 #' @param beta present values of beta at the present step at MCMC
@@ -44,7 +44,7 @@ SIR.ODE <- function(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic) {
 #'
 #' @param SI_ti return values from SIR.ODE() function.
 #' @param p.m values of beta, gamma, rho
-#' @param delta duration of infectious period
+#' @param delta.t duration of infectious period
 #' @param n.num number of susecptible
 #' @param nz.num number of removed among initially susceptible individual returning likelihood
 #' @export
@@ -153,14 +153,14 @@ SDS.MCMC <- function(data, Tmax, fitn = T, nrepeat = 1000,
 #'
 #' This Plot summrizes MCMC simulation results.
 #'
-#' @param theta inputted data set. It contains MCMC simulation results.
+#' @param data theta - inputted data set. It contains MCMC simulation results.
 #' @param fitn if T the function estimate initial number of susceptible, if F the function does not estimate N and calculate from data, so inputted data must cover a total population
-#' @param burn burning period
-#' @param thin tinning period
-#' @param nrepeat number of posterior sample
+#' @param burn1 burn - burning period
+#' @param thin1 thin - tinning period
+#' @param nrepeat1 nrepeat - number of posterior sample
 #' @return returning plots that summrizes MCMC simulation results
 #' @export
-result <- function(data, fitn = T, burn1=burn, nrepeat1=nrepeat, thin1=thin){
+result <- function(data=theta, fitn = T, burn1=burn, nrepeat1=nrepeat, thin1=thin){
   sel = burn1+seq(0,by=thin1,length.out = (nrepeat1))
   result = data[sel,];
   stat = rbind(apply(result,2,min),

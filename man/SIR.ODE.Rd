@@ -7,6 +7,8 @@
 SIR.ODE(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic)
 }
 \arguments{
+\item{indata}{descrete time of an individual. This values are came from Sellke epidemic data}
+
 \item{Tmax}{cutoff time of epidemic}
 
 \item{dt}{time increment of ODE}
@@ -16,8 +18,6 @@ SIR.ODE(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic)
 \item{gamma}{present values of gamma at the present step at MCMC}
 
 \item{ic}{initial values of ODE set to c(1.0, rho, 0.0), rho set the present values of beta and gamma at the present step at MCMC}
-
-\item{inata}{descrete time of an individual. This values are came from Sellke epidemic data}
 }
 \description{
 These functions are to draw posterior samples using MCMC for SDS likelihood in subsection 4.2 and Algorithm 5.1
