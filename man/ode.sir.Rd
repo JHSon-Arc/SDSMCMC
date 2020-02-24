@@ -6,6 +6,9 @@
 \usage{
 ode.sir(x, k1 = beta, k2 = gamma)
 }
+\value{
+
+}
 \description{
 euler.prob
 rho=.038

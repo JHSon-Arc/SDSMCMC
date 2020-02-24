@@ -5,6 +5,11 @@
 #'beta=0.2160
 #'gamma=0.1928
 #'
+#' @param rho
+#' @param gamma
+#' @param lambda
+#' @param k
+#' @return
 #' @export
 ode.final.size=function(rho=0.01, gamma=1,lambda=2.9,k=20)
 { x=vector('numeric',k)
@@ -21,6 +26,12 @@ return(x) }
 #'beta=0.2160
 #'gamma=0.1928
 #'
+#' @param x0
+#' @param y0
+#' @param gamma
+#' @param lambda
+#' @param k
+#' @return
 #' @export
 ode.final.size.cnt=function(x0=100, y0=1, gamma=1,lambda=1.9,k=20)
 {x=vector('numeric',k)
@@ -38,6 +49,11 @@ return(x*n) }
 #'beta=0.2160
 #'gamma=0.1928
 #'
+#' @param t
+#' @param dt
+#' @param fun
+#' @param ic
+#' @return
 #' @export
 euler <- function(t = 120, dt = 0.001, fun = f, ic=c(1,rho,0))
 {
@@ -61,6 +77,10 @@ ts(xmat,start=0,deltat=dt)
 #'beta=0.2160
 #'gamma=0.1928
 #'
+#' @param x
+#' @param k1
+#' @param k2
+#' @return
 #' @export
 ode.sir <- function(x, k1=beta, k2=gamma)
  {

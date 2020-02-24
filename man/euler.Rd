@@ -6,6 +6,9 @@
 \usage{
 euler(t = 120, dt = 0.001, fun = f, ic = c(1, rho, 0))
 }
+\value{
+
+}
 \description{
 euler.prob
 rho=.038

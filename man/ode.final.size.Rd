@@ -6,6 +6,9 @@
 \usage{
 ode.final.size(rho = 0.01, gamma = 1, lambda = 2.9, k = 20)
 }
+\value{
+
+}
 \description{
 euler.prob
 rho=.038
