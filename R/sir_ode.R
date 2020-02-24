@@ -5,10 +5,10 @@
 #'beta=0.2160
 #'gamma=0.1928
 #'
-#' @param rho
-#' @param gamma
-#' @param lambda
-#' @param k
+#' @param rho rho
+#' @param gamma gamma
+#' @param lambda lambda
+#' @param k k
 #' @return
 #' @export
 ode.final.size=function(rho=0.01, gamma=1,lambda=2.9,k=20)
@@ -26,11 +26,11 @@ return(x) }
 #'beta=0.2160
 #'gamma=0.1928
 #'
-#' @param x0
-#' @param y0
-#' @param gamma
-#' @param lambda
-#' @param k
+#' @param x0 x0
+#' @param y0 y0
+#' @param gamma gamma
+#' @param lambda lambda
+#' @param k k
 #' @return
 #' @export
 ode.final.size.cnt=function(x0=100, y0=1, gamma=1,lambda=1.9,k=20)
@@ -49,10 +49,10 @@ return(x*n) }
 #'beta=0.2160
 #'gamma=0.1928
 #'
-#' @param t
-#' @param dt
-#' @param fun
-#' @param ic
+#' @param t t
+#' @param dt dt
+#' @param fun fun
+#' @param ic c(1, rho, 0)
 #' @return
 #' @export
 euler <- function(t = 120, dt = 0.001, fun = f, ic=c(1,rho,0))
@@ -77,13 +77,15 @@ ts(xmat,start=0,deltat=dt)
 #'beta=0.2160
 #'gamma=0.1928
 #'
-#' @param x
-#' @param k1
-#' @param k2
+#' @param x x
+#' @param k1 beta
+#' @param k2 gamma
 #' @return
 #' @export
 ode.sir <- function(x, k1=beta, k2=gamma)
- {
-  c( -k1*x[1]*x[2],  k1*x[1]*x[2] - k2*x[2], k2*x[2])
-  }
+{
+  c( -k1*x[1]*x[2] ,
+     k1*x[1]*x[2] - k2*x[2], k2*x[2])
+}
+
 #' @example plot.ts(euler(fun=ode.sir),plot.type="si",ylab='SIR_ODE')

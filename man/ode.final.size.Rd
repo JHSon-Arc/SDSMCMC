@@ -6,6 +6,15 @@
 \usage{
 ode.final.size(rho = 0.01, gamma = 1, lambda = 2.9, k = 20)
 }
+\arguments{
+\item{rho}{rho}
+
+\item{gamma}{gamma}
+
+\item{lambda}{lambda}
+
+\item{k}{k}
+}
 \value{
 
 }

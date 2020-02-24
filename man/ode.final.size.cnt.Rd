@@ -6,6 +6,17 @@
 \usage{
 ode.final.size.cnt(x0 = 100, y0 = 1, gamma = 1, lambda = 1.9, k = 20)
 }
+\arguments{
+\item{x0}{x0}
+
+\item{y0}{y0}
+
+\item{gamma}{gamma}
+
+\item{lambda}{lambda}
+
+\item{k}{k}
+}
 \value{
 
 }

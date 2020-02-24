@@ -6,6 +6,13 @@
 \usage{
 ode.sir(x, k1 = beta, k2 = gamma)
 }
+\arguments{
+\item{x}{x}
+
+\item{k1}{beta}
+
+\item{k2}{gamma}
+}
 \value{
 
 }
