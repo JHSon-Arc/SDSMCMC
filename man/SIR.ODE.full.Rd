@@ -17,6 +17,9 @@ SIR.ODE.full(Tmax, dt = 0.01, beta, gamma, ic)
 
 \item{ic}{initial values of ODE set to c(1.0, rho, 0.0), rho set the present values of beta and gamma at the present step at MCMC}
 }
+\value{
+
+}
 \description{
 This function solves the ODE in Eq. (2.7)
 }

@@ -17,6 +17,9 @@ llikelihood(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz)
 
 \item{nz.num}{number of removed among initially susceptible individual returning likelihood}
 }
+\value{
+
+}
 \description{
 Likelihood function for Eq. (4.3)
 }

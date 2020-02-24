@@ -9,6 +9,7 @@
 #' @param beta present values of beta at the present step at MCMC
 #' @param gamma present values of gamma at the present step at MCMC
 #' @param ic initial values of ODE set to c(1.0, rho, 0.0), rho set the present values of beta and gamma at the present step at MCMC
+#' @return
 #' @export
 SIR.ODE <- function(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic) {
   p <- length(ic)
@@ -47,6 +48,7 @@ SIR.ODE <- function(indata = ti, Tmax = T.max, dt = 0.01, beta, gamma, ic) {
 #' @param delta.t duration of infectious period
 #' @param n.num number of susecptible
 #' @param nz.num number of removed among initially susceptible individual returning likelihood
+#' @return
 #' @export
 llikelihood <- function(SI_ti, p.m, delta.t = delta, n.num = n, nz.num = nz) {
   k <- nrow(SI_ti)

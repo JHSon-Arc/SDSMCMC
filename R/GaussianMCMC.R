@@ -100,6 +100,7 @@ Gaussian.MCMC <- function(data, nrepeat, ic = c(k1, k2, k3), tun, prior.a, prior
 #' @param beta present values of beta at the present step at MCMC
 #' @param gamma present values of gamma at the present step at MCMC
 #' @param ic initial values of ODE set to c(1.0, rho, 0.0), rho set the present values of beta and gamma at the present step at MCMC
+#' @return
 #' @export
 SIR.ODE.full <- function(Tmax, dt = 0.01, beta, gamma, ic) {
   p = length(ic)
