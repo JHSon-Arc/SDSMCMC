@@ -29,15 +29,15 @@ library(plyr)
 library(MASS)
 library(smfsb)
 library(ramcmc) 
-#library(SDSMCMC)
+library(SDSMCMC)
 
-source("SdsMCMC.R")
-source("GaussianMCMC.R")
-source("GillespieMCMC.R")
-source("Sellke.R")
-source("SellkeToTrajecotory.R")
-source("SirMle.R")
-source("sir_ode.R")
+# source("SdsMCMC.R")
+# source("GaussianMCMC.R")
+# source("GillespieMCMC.R")
+# source("Sellke.R")
+# source("SellkeToTrajecotory.R")
+# source("SirMle.R")
+# source("sir_ode.R")
 
 ############################################################################
 # The first example data: H1N1 pandemic data from WSU campus 
@@ -45,12 +45,12 @@ source("sir_ode.R")
 # Input data should have two columns. The first is infection time and the second is recovery time. 
 
 
-data = read.csv(file = "WSU.csv")
+data = WSU
 T.max=104; # cut-off time point 
 n1=0; # initial number of susceptible 
 burn = 1000; #  burning period
 thin =1; # tinning period 
-nrepeat = 2000; # number of posterior sample;  
+nrepeat = 5000; # number of posterior sample;  
 sim.num= burn + nrepeat * thin; # total number of simulation 
 
 sds  <- SDS.MCMC(data = data, Tmax=T.max, fitn = T, nrepeat = sim.num, 
@@ -68,15 +68,15 @@ library(plyr)
 library(MASS)
 library(smfsb)
 library(ramcmc) 
-#library(SDSMCMC)
+library(SDSMCMC)
 
-source("SdsMCMC.R")
-source("GaussianMCMC.R")
-source("GillespieMCMC.R")
-source("Sellke.R")
-source("SellkeToTrajecotory.R")
-source("SirMle.R")
-source("sir_ode.R")
+# source("SdsMCMC.R")
+# source("GaussianMCMC.R")
+# source("GillespieMCMC.R")
+# source("Sellke.R")
+# source("SellkeToTrajecotory.R")
+# source("SirMle.R")
+# source("sir_ode.R")
 
 ############################################################################
 # Second example data: simulation data. The data is simulated by Sellke construction.
@@ -97,13 +97,13 @@ plot.ts(euler(fun=ode.sir),plot.type="si",ylab='SIR_ODE')
 pop.data = Sellke(n=n, rho=k3, beta=k1, gamma=k2, Tmax = T.max)
 
 #MCMC using Method 3. In this example, we estimate three parameters given n = 1000 
-sds  <- SDS.MCMC(fitn = F, data = pop.data, Tmax=T.max, nrepeat = sim.num, 
+sds  <- SDS.MCMC(data = pop.data, Tmax=T.max, fitn = F, nrepeat = sim.num, 
                  prior.a=c(0.001,0.001,0.001), prior.b=c(0.001,0.001,0.001), ic = c(k1, k2, k3, n))
 result(data = sds, fitn = F)
 
 
 # MCMC using Method 3. In this example, we estimate three parameters and the initial number of susecptible 
-sds  <- SDS.MCMC(fitn = T, data = pop.data, Tmax=T.max, nrepeat = sim.num, 
+sds  <- SDS.MCMC(data = pop.data, Tmax=T.max, fitn = T, nrepeat = sim.num, 
                  prior.a=c(0.001,0.001,0.001), prior.b=c(0.001,0.001,0.001), ic = c(k1, k2, k3, n))
 result(data = sds, fitn = T)
 </code>
@@ -118,15 +118,15 @@ library(plyr)
 library(MASS)
 library(smfsb)
 library(ramcmc) 
-#library(SDSMCMC)
+library(SDSMCMC)
 
-source("SdsMCMC.R")
-source("GaussianMCMC.R")
-source("GillespieMCMC.R")
-source("Sellke.R")
-source("SellkeToTrajecotory.R")
-source("SirMle.R")
-source("sir_ode.R")
+#source("SdsMCMC.R")
+#source("GaussianMCMC.R")
+#source("GillespieMCMC.R")
+#source("Sellke.R")
+#source("SellkeToTrajecotory.R")
+#source("SirMle.R")
+#source("sir_ode.R")
 
 # Third example data: simulation data. The data is simulated by Sellke construction.
 # This example has two MCMC simulations using synthetic data by Sellke construction. 
