@@ -16,10 +16,6 @@ GaussianMCMC.R: This function generates posterior samples of beta, gamma, and rh
 
 SdsMCMC.R: These functions are to draw posterior samples using MCMC for SDS likelihood in subsection 4.2 and Algorithm 5.1.
 
-Example.R: This file provides examples using R codes to generate synthetic epidemic data and to estimate parameters accoriding to estimation methods described in the paper.
-
-WS_data_MCMC_NB.R: R code of MCMC simulation for H1N1 pandemic data at Washington State University data1.csv: Daily count data of H1N1 pandemic at Washington State University
-
 <pre>
 # Example1
 <code>
