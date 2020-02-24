@@ -87,12 +87,6 @@ sim.num= burn + nrepeat * thin; # total number of simulation
 #initial parameter setting
 k1 = 1.1; k2 = 0.8 ; k3 = 0.05; n=1000; T.max = 30; 
 beta=k1; gamma=k2; rho=k3;
-ode.sir <- function(x, k1=beta, k2=gamma)
-{
-  c( -k1*x[1]*x[2] ,
-     k1*x[1]*x[2] - k2*x[2], k2*x[2])
-}
-plot.ts(euler(fun=ode.sir),plot.type="si",ylab='SIR_ODE')
 
 #generating synthetic epidemic data using Sellke construction
 pop.data = Sellke(n=n, rho=k3, beta=k1, gamma=k2, Tmax = T.max)
@@ -141,12 +135,6 @@ sim.num= burn + nrepeat * thin; # total number of simulation
 #initial parameter setting
 k1 = 1.1; k2 = 0.8 ; k3 = 0.05; n=1000; T.max = 30; 
 beta=k1; gamma=k2; rho=k3;
-ode.sir <- function(x, k1=beta, k2=gamma)
-{
-  c( -k1*x[1]*x[2] ,
-     k1*x[1]*x[2] - k2*x[2], k2*x[2])
-}
-plot.ts(euler(fun=ode.sir),plot.type="si",ylab='SIR_ODE')
 
 #generating synthetic epidemic data using Sellke construction
 pop.data = Sellke(n=n, rho=k3, beta=k1, gamma=k2, Tmax = T.max)
