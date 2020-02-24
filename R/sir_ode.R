@@ -84,7 +84,6 @@ ts(xmat,start=0,deltat=dt)
 #' @export
 ode.sir <- function(x, k1=beta, k2=gamma)
  {
-  c( -k1*x[1]*x[2] ,
-  k1*x[1]*x[2] - k2*x[2], k2*x[2])
+  c( -k1*x[1]*x[2],  k1*x[1]*x[2] - k2*x[2], k2*x[2])
   }
 #' @example plot.ts(euler(fun=ode.sir),plot.type="si",ylab='SIR_ODE')
