@@ -96,14 +96,14 @@ SDS.MCMC <- function(data, Tmax, fitn = T, nrepeat = 1000,
   S <- diag(3)
   for (rep in 1:nrepeat) {
     repeat {
-      u <- mvrnorm(1, c(0, 0, 0), diag(c(1, 1, 1)))
-      parm.star <- parm.m + S %*% u
-      if ((min(parm.star) > 0) & (parm.star[3] < 1)) {
-        tau <- uniroot(function(x) 1 - x - exp(-parm.star[1]/parm.star[2] *
-                                                 (x + parm.star[3])), c(0, 1))$root
-        if ((tau > 0) & (tau < 1))
-          break
-      }
+      u <- mvrnorm(1, c(0, 0, 0), diag(c(1, 1, 0.1))*0.1)
+      s.parm.star = c(log(parm.m[1:2]),qlogis(parm.m[3])) + S%*%u
+      parm.star[1:2] = exp(s.parm.star[1:2])
+      parm.star[3] = plogis(s.parm.star[3])
+      tau <- uniroot(function(x) 1 - x - exp(-parm.star[1]/parm.star[2] *
+                                               (x + parm.star[3])), c(0, 1))$root
+      if ((tau > 0) & (tau < 1))
+        break
     }
     sir.m <- SIR.ODE(indata = ti, Tmax = T.max, beta = parm.m[1], gamma = parm.m[2],
                      ic = c(1, parm.m[3], 0))
@@ -114,6 +114,8 @@ SDS.MCMC <- function(data, Tmax, fitn = T, nrepeat = 1000,
     l.lik.star <- llikelihood(SI_ti = sir.star, p.m = parm.star, n.num = n,
                               delta.t = delta, nz.num = nz)
     alpha <- exp(l.lik.star - l.lik.m
+                 + sum(log(parm.star)) + log(1-parm.star[3]) #jacobian
+                 - sum(log(parm.m))    - log(1-parm.m[3])    #jacobian
                  + dgamma(parm.star[1], prior.a[1], prior.b[1], log = T)
                  - dgamma(parm.m[1], prior.a[1], prior.b[1], log = T)
                  + dgamma(parm.star[2], prior.a[2], prior.b[2], log = T)
@@ -139,7 +141,7 @@ SDS.MCMC <- function(data, Tmax, fitn = T, nrepeat = 1000,
     }
     if (rep%%1000 == 0) cat("0")
   }
-  cat("Acceptance ratio of parameters: ",count/nrepeat,"\n")
+  cat("\n","Acceptance ratio of parameters: ",count/nrepeat,"\n")
   if(fitn ==T){
     colnames(theta) = c("beta","gamma","rho", "N")
   }else{
